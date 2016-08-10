@@ -15,7 +15,6 @@
     </metadata>
     <component group="polopoly.Content" name="name">Internal index mappings for audio</component>
     <component group="mapping" name="contentData.title">title</component>
-    <component group="mapping" name="name">text</component>
     <component group="mapping" name="contentData.description">text</component>
     <component group="mapping" name="contentData.byline">byline</component>
     <component group="mapping" name="associatedUsers.associatedUsers">modifiedBy</component>
@@ -50,10 +49,7 @@
     </metadata>
     <component group="polopoly.Content" name="name">Public index mappings for audio</component>
     <component group="mapping" name="contentData.title">title</component>
-    <component group="mapping" name="name">text</component>
     <component group="mapping" name="contentData.description">text</component>
-    <component group="mapping" name="contentData.byline">byline</component>
-    <component group="mapping" name="associatedUsers.associatedUsers">modifiedBy</component>
   </content>
 
   <content>
