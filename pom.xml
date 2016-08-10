@@ -169,33 +169,6 @@
       </plugin>
 
       <!--
-          Enables Less CSS compilation of sources in ${project.basedir}/src/main/less.
-          Remove this plugin if not using Less.
-      -->
-      <!-- TODO remove -->
-      <!--
-      <plugin>
-        <groupId>de.sandroboehme.lesscss</groupId>
-        <artifactId>lesscss-maven-plugin</artifactId>
-        <version>1.6.1.1.0</version>
-        <executions>
-          <execution>
-            <id>less-compile</id>
-            <goals>
-              <goal>compile</goal>
-            </goals>
-            <configuration>
-              <outputDirectory>${project.build.directory}/generated-contentfiles</outputDirectory>
-              <compress>true</compress>
-              <includes>
-                <include>*.less</include>
-              </includes>
-            </configuration>
-          </execution>
-        </executions>
-      </plugin>
-      -->
-      <!--
           Compresses css and js resources. Adds .min suffix to target files and puts them alongside
           the source files. With the configuration below, both the compressed and source
           resources will be imported to the files content. Which version to use runtime is
@@ -237,16 +210,6 @@
         <version>${polopoly.version}</version>
         <configuration>
           <generatePluginXml>true</generatePluginXml>
-          <hotFolders>
-            <hotFolder>
-              <plugin>de.sandroboehme.lesscss:lesscss-maven-plugin:compile</plugin>
-              <sourceDirectory>${project.basedir}/src/main/less</sourceDirectory>
-            </hotFolder>
-            <hotFolder>
-              <plugin>net.alchim31.maven:yuicompressor-maven-plugin:compress</plugin>
-              <sourceDirectory>${project.basedir}/src/main/javascript</sourceDirectory>
-            </hotFolder>
-          </hotFolders>
         </configuration>
         <executions>
           <execution>
@@ -264,37 +227,12 @@
             <phase>package</phase>
             <configuration>
               <contentDataFileResources>
-                <!--
-                <files>
-                  <directory>${project.basedir}/src/main/javascript</directory>
-                  <includes>
-                    <include>**/*.js</include>
-                  </includes>
-                </files>
-                -->
-                <!-- Uncomment to include css source files on plugin files content.
-                <files>
-                  <directory>${project.basedir}/src/main/css</directory>
-                  <includes>
-                    <include>**/*.css</include>
-                  </includes>
-                </files>
-                -->
                 <files>
                   <directory>${project.basedir}/src/main/contentfiles</directory>
                   <includes>
                     <include>**</include>
                   </includes>
                 </files>
-                <!-- Remove this source directory if not used -->
-                <!--
-                <files>
-                  <directory>${project.build.directory}/generated-contentfiles</directory>
-                  <includes>
-                    <include>**</include>
-                  </includes>
-                </files>
-                -->
               </contentDataFileResources>
             </configuration>
           </execution>
