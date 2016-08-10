@@ -1,0 +1,105 @@
+{
+  "id": "com.atex.plugins.audio.Audio.edit",
+
+  "type": "com.atex.plugins.audio.AudioContentDataBean",
+
+  "label": "Audio",
+  "namePath": "contentData/title",
+
+  "aspects": {
+    "atex.Files": {},
+    "atex.Metadata": {}
+  },
+
+  "dataBindings": [
+    {
+      "label": "Audio",
+      "widget": "pAudioEditor",
+      
+      "config": {
+        "editable": true,
+        "blacklist": false,
+        "mimeTypes": ["audio/*"]      
+      },
+
+      "domainObjects": {
+        "files": "atex.Files",
+        "filePath": "contentData/fileName",
+        "duration": "contentData/duration"
+      }
+    },
+    {
+      "label": "Name",
+      "widget": "pTextInput",
+
+      "domainObjects": {
+        "data": "contentData/title"
+      }
+    },
+    {
+      "label": "In-cue",
+      "widget": "pTextInput",
+
+      "config": {
+        "placeholder": "First words of audio file..."
+      },
+
+      "domainObjects": {
+        "data": "contentData/inCue"
+      }
+    },
+    
+    {
+      "label": "Out-cue",
+      "widget": "pTextInput",
+
+      "config": {
+        "placeholder": "Last words of audio file..."
+      },
+
+      "domainObjects": {
+        "data": "contentData/outCue"
+      }
+    },
+    
+    {
+      "label": "Description",
+      "widget": "pTextArea",
+
+      "domainObjects": {
+        "data": "contentData/description"
+      }
+    },
+
+    {
+      "label": "Byline",
+      "widget": "pTextInput",
+
+      "config": {
+        "placeholder": "Byline of video goes here..."
+      },
+
+      "domainObjects": {
+        "data": "contentData/byline"
+      }
+    },
+    {
+      "label": "Associated Sites",
+      "widget": "pAssociatedSites",
+
+      "domainObjects": {
+        "associatedSites": "p.InsertionInfo/associatedSites",
+        "taxonomyIds": "atex.Metadata/taxonomyIds"
+      }
+    },
+    {
+      "label": "Metadata",
+      "widget": "pMetadata",
+
+      "domainObjects": {
+        "data": "atex.Metadata"
+      }
+    }
+       
+  ]
+}

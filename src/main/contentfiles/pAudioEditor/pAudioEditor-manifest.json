@@ -1,0 +1,91 @@
+{
+  "name": "File Uploader widget",
+  "description": "A widget for uploading files to a content",
+  "scripts": ["widget.js"],
+  "requires": [
+    {
+      "name": "spinjs",
+      "path": "lib/spin.min.js"
+    },
+    {
+      "name": "ACAAFilter",
+      "path": "lib/ACAAFilter.js"
+    },
+    {
+      "name": "ACFFT",
+      "path": "lib/ACFFT.js"
+    },
+    {
+      "name": "ACFIRFilter",
+      "path": "lib/ACFIRFilter.js"
+    },
+    {
+      "name": "ACSpectrum",
+      "path": "lib/ACSpectrum.js"
+    },
+    {
+      "name": "audioLayerControl",
+      "path": "lib/audioLayerControl.js"
+    },
+    {
+      "name": "audioplayback",
+      "path": "lib/audioplayback.js"
+    },
+    {
+      "name": "audiosequence",
+      "path": "lib/audiosequence.js"
+    },
+    {
+      "name": "AudioSequenceEditor",
+      "path": "lib/AudioSequenceEditor.js"
+    },
+    {
+      "name": "binarytoolkit",
+      "path": "lib/binarytoolkit.js"
+    },
+    {
+      "name": "editorapp",
+      "path": "lib/editorapp.js"
+    },
+    {
+      "name": "fft",
+      "path": "lib/fft.js"
+    },
+    {
+      "name": "filedropbox",
+      "path": "lib/filedropbox.js"
+    },
+    {
+      "name": "filesystemutility",
+      "path": "lib/filesystemutility.js"
+    },
+    {
+      "name": "mathutilities",
+      "path": "lib/mathutilities.js"
+    },
+    {
+      "name": "recorder",
+      "path": "lib/recorder.js"
+    },
+    {
+      "name": "recorderWorker",
+      "path": "lib/recorderWorker.js"
+    },
+    {
+      "name": "SpectrumDisplay",
+      "path": "lib/SpectrumDisplay.js"
+    },
+    {
+      "name": "SpectrumWorker",
+      "path": "lib/SpectrumWorker.js"
+    },
+    {
+      "name": "wavetrack",
+      "path": "lib/wavetrack.js"
+    },
+    {
+      "name": "volumeMeter",
+      "path": "lib/volumeMeter.js"
+    }
+  ]
+}

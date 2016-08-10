@@ -1,0 +1,202 @@
+<link rel="stylesheet" type="text/css" x-ng-href="{{baseUrl}}/css/layout.css" />
+<!--
+<link rel="stylesheet" type="text/css" x-ng-href="{{baseUrl}}/css/bootstrap.css" />
+<link rel="stylesheet" type="text/css" x-ng-href="{{baseUrl}}/css/bootstrap-responsive.css" />
+-->
+<div class="file-uploader">
+	
+	<div x-ng-show="loadMonitor.inProgress || showDropHelper || error" class="overlay-helper">
+		<div x-ng-show="showDropHelper && !loadMonitor.inProgress && !error" class="drop-helper">
+			<span>Drop here!</span>
+		</div>
+		<ul class="overlay-actions list-inline">
+			<li x-ng-show="loadMonitor.inProgress && loadMonitor.cancellable && !showDropHelper" x-ng-click="removeOrCancelFile($event);" class="btn">
+				<i class="fa fa-times-circle fa-inverse fa-fw"></i>
+				<span>Cancel</span>
+			</li>
+			<li x-ng-show="loadMonitor.inProgress && loadMonitor.recording && !showDropHelper" x-ng-click="stopRecord($event);" class="btn">
+				<i class="fa fa-times-circle fa-inverse fa-fw"></i>
+				<span>Stop recording</span>
+			</li>
+			<li x-ng-show="error" x-ng-click="dismissError($event)" class="btn">
+				<i class="fa fa-times-circle fa-inverse fa-fw"></i>
+				<span x-ng-show="error.dismissable">Dismiss</span>
+				<span x-ng-show="!error.dismissable">Remove File</span>
+			</li>
+		</ul>
+
+		<div x-ng-show="loadMonitor.inProgress && !showDropHelper && !error" class="file-uploader-spinner">
+			<span class="spinner-label" x-ng-show="!loadMonitor.recording">Loading file...	<span x-ng-show="loadMonitor.useProgress">{{loadMonitor.progress}}%</span></span>
+			<span class="spinner-label" x-ng-show="loadMonitor.recording">Recording...</span>
+		</div>
+		<div x-ng-show="error && !loadMonitor.inProgress && !showDropHelper" class="error-area">
+			<i class="fa fa-exclamation-triangle error-icon fa-inverse fa-fw"></i>
+			<span class="error-message">{{error.message}}</span>
+		</div>
+		<canvas x-ng-show="loadMonitor.recording" id="recordMeter" width="20" height="190" style="position: absolute; left: 5px; top: 4px;"></canvas>
+	</div>
+	<div class="upload-area" x-ng-class="{ 'apply-blur': loadMonitor.inProgress || showDropHelper || error }">
+		<div class="upload-controls">
+			<div x-ng-if="data" class="current-file">Current file: <a x-ng-click="download($event);">{{data}}</a></div>
+			<span x-ng-if="editable && !data">
+				<span x-ng-if="!recordInProgress">Drop a file, press</span>
+				<a x-ng-disabled="loadMonitor.inProgress || showDropHelper || error" class="btn btn-default browse-button" x-ng-if="!recordInProgress">Browse</a>
+				<span class="visible-inline-md visible-inline-lg" x-ng-if="!recordInProgress">to select one or</span>
+				<a x-ng-disabled="loadMonitor.inProgress || showDropHelper || error" x-ng-if="!recordInProgress" class="btn btn-default" x-ng-click="record($event);">Record</a>
+				<a x-ng-disabled="loadMonitor.inProgress || showDropHelper || error" x-ng-if="recordInProgress" class="btn btn-default" x-ng-click="stopRecord($event);">Stop Record</a>
+			</span>
+			<a x-ng-if="editable && data" x-ng-click="removeOrCancelFile($event)">Remove file</a>
+		</div>
+	</div>
+</div>
+<input type="file" class="offscreen file-browse">
+
+<div class="audio-editor">
+
+
+
+	<div class="container-fluid">
+		<div class="row-fluid">
+			<div class="span11">
+				<center x-ng-if="editable && data">
+					<div class="btn-toolbar">
+						<div class="btn-group">
+							<a class="btn btn-primary" onclick="$('#audioLayerControl')[0].copy();"><i class="icon-share icon-white"></i> Copy</a>
+							<a class="btn btn-primary" onclick="$('#audioLayerControl')[0].paste();"><i class="icon-chevron-down icon-white"></i> Paste</a>
+							<a class="btn btn-primary" onclick="$('#audioLayerControl')[0].cut();"><i class="icon-chevron-up icon-white"></i> Cut</a>
+							<a class="btn btn-primary" onclick="$('#audioLayerControl')[0].crop();"><i class="icon-retweet icon-white"></i> Crop</a>
+							<a class="btn btn-primary" onclick="$('#audioLayerControl')[0].del();"><i class="icon-remove icon-white"></i> Delete</a>
+						</div>
+						<div class="btn-group">
+							<a class="btn btn-success" onclick="$('#audioLayerControl')[0].selectAll();"><i class="icon-resize-horizontal icon-white"></i> Select All</a>
+							<a class="btn btn-success" onclick="$('#audioLayerControl')[0].zoomIntoSelection();"><i class="icon-plus-sign icon-white"></i> Zoom To Selection</a>
+							<a class="btn btn-success" onclick="$('#audioLayerControl')[0].zoomToFit();"><i class="icon-fullscreen icon-white"></i> Zoom To Fit</a>
+						</div>
+					</div>
+				</center>
+			</div>
+			<div class="span1">
+				<h3><span class="label label-success" id="duration" style="line-height: 30px">{{durationStr}}</span></h3>
+			</div>
+		</div>
+		<div class="row-fluid">
+			<div class="span9">
+				<h6>Editor</h6>
+				<div class="well">
+					<div class="progress progress-striped active">
+						<div id="app-progress" class="bar" style="width: 0%;"></div>
+					</div>
+					<audioLayerControl id="audioLayerControl" title="{{data}}" />
+				</div>
+			</div>
+			<div class="span3">
+				<h6>Spectrum</h6>
+				<div class="well">
+					<div id="spectrum"></div>
+				</div>
+			</div>
+		</div>
+		<div class="row-fluid">
+			<div class="span12">
+				<center>
+					<div class="btn-toolbar">
+						<div class="btn-group">
+							<a id="btn_play" class="btn btn-success btn-large" onclick="$('#audioLayerControl')[0].play()" rel="tooltip" title="first tooltip"><i class="icon-play icon-white"></i> Play</a>
+							<a id="btn_pause" class="btn btn-success btn-large disabled"  onclick="$('#audioLayerControl')[0].pause()"><i class="icon-pause icon-white"></i> Pause</a>
+							<a id="btn_resume" class="btn btn-success btn-large"  onclick="$('#audioLayerControl')[0].resume()" style="display: none;"><i class="icon-pause icon-white"></i> Resume</a>
+							<a id="btn_stop" class="btn btn-success btn-large" onclick="$('#audioLayerControl')[0].stop()"><i class="icon-stop icon-white"></i> Stop</a>
+							<a id="btn_loop" class="btn btn-warning btn-large" data-toggle="button" onclick="$('#audioLayerControl')[0].toggleLoop();"><i class="icon-repeat icon-white"></i> Loop</a>
+						</div>
+						<div class="btn-group">
+							<a class="btn btn-large btn-primary" x-ng-if="editable && data" x-ng-click="upload($event)">Apply</a>
+						</div>
+					</div>
+				</center>
+			</div>
+		</div>
+		<div class="row-fluid" x-ng-if="editable && data">
+			<div class="span1"></div>
+			<div class="span2">
+				<h6>Gain</h6>
+				<div class="well" style="height: 130px; position: relative">
+					<p>Change the volume of the selected audio sequence with the given gain multiplicator.</p>
+
+					<div class="pull-right" style="position: absolute; bottom: 5px; width: 100%;">
+						<div class="btn-group">
+
+							<button class="btn btn-success" onclick="decrease_db()"><i class="icon-minus"></i></button>
+							<button id="gain-db" class="btn disabled" onclick="gain_btn_clicked()">0 db</button>
+							<button class="btn btn-success" onclick="increase_db()"><i class="icon-plus"></i></button>
+						</div>
+					</div>
+					<script type="text/javascript">
+		                var db_gain = 0;
+		                function decrease_db()
+		                {
+		                  --db_gain;
+		                  update_db_gain_btn();
+		                }
+		                function increase_db()
+		                {
+		                  ++db_gain;
+		                  update_db_gain_btn();
+		                }
+		                function update_db_gain_btn()
+		                {
+		                  var gain_btn = $('#gain-db')[0];
+		                  gain_btn.innerHTML = db_gain + ' db'; 
+		                  if (db_gain === 0)
+		                  {
+		                    gain_btn.className = 'btn disabled';
+		                  }
+		                  else
+		                  {
+		                    gain_btn.className = 'btn btn-primary';
+		                  }
+		                }
+		                function gain_btn_clicked()
+		                {
+		                  $('#audioLayerControl')[0].filterGain(db_gain);
+		                  db_gain = 0;
+		                  update_db_gain_btn();
+		                }
+		            </script>
+				</div>
+			</div>
+
+			<div class="span2">
+				<h6>Normalize</h6>
+				<div class="well" style="height: 130px; position: relative">
+					<p>Adjust the volume to the maximum of the selected audio sequence.</p>
+					<a style="position: absolute; bottom: 5px; right: 5px" class="btn btn-primary pull-right" onclick="$('#audioLayerControl')[0].filterNormalize();">Apply</a>
+					<br>
+				</div>
+			</div>
+			<div class="span2">
+				<h6>Silence</h6>
+				<div class="well" style="height: 130px; position: relative">
+					<p>Silence the selected audio sequence</p>
+					<a style="position: absolute; bottom: 5px; right: 5px" class="btn btn-primary pull-right" onclick="$('#audioLayerControl')[0].filterSilence();">Apply</a>
+					<br>
+				</div>
+			</div>
+			<div class="span2">
+				<h6>Fade In</h6>
+				<div class="well" style="height: 130px; position: relative">
+					<p>Create a linear fade int of the selected audio sequence</p>
+					<a style="position: absolute; bottom: 5px; right: 5px" class="btn btn-primary pull-right" onclick="$('#audioLayerControl')[0].filterFadeIn();">Apply</a>
+					<br>
+				</div>
+			</div>
+			<div class="span2">
+				<h6>Fade Out</h6>
+				<div class="well" style="height: 130px; position: relative">
+					<p>Create a linear fade out of the selected audio sequence</p>
+					<a style="position: absolute; bottom: 5px; right: 5px" class="btn btn-primary pull-right" onclick="$('#audioLayerControl')[0].filterFadeOut();">Apply</a>
+					<br>
+				</div>
+			</div>
+			<div class="span1"></div>
+		</div>
+	</div>
+</div>

@@ -1,0 +1,6 @@
+# Register write information for Article and Image
+# (Needed to make these show up in appropriate plugin content creators)
+id:.
+major:3
+inputtemplate:com.atex.onecms.content.ContentManager.config
+component:inputTemplateMapping:com.atex.plugins.audio.AudioContentDataBean:com.atex.plugins.audio.Audio

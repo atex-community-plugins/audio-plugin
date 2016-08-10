@@ -1,0 +1,93 @@
+{
+  "id": "com.atex.plugins.audio.Audio.view",
+
+  "type": "com.atex.plugins.audio.AudioContentDataBean",
+
+  "label": "Audio View",
+  "namePath": "contentData/title",
+
+  "aspects": {
+    "atex.Files": {},
+    "atex.Metadata": {}
+  },
+
+  "dataBindings": [
+    {
+      "label": "Audio",
+      "widget": "pAudioEditor",
+      
+      "config": {
+        "editable": false
+      },
+
+      "domainObjects": {
+        "files": "atex.Files",
+        "filePath": "contentData/fileName",
+        "duration": "contentData/duration"
+      }
+    },
+
+    {
+      "label": "Name",
+      "widget": "pTextOutput",
+
+      "domainObjects": {
+        "data": "contentData/title"
+      }
+    },
+    
+    {
+      "label": "In-cue",
+      "widget": "pTextOutput",
+
+      "domainObjects": {
+        "data": "contentData/inCue"
+      }
+    },
+    
+    {
+      "label": "Out-cue",
+      "widget": "pTextOutput",
+
+      "domainObjects": {
+        "data": "contentData/outCue"
+      }
+    },
+    
+    {
+      "label": "Description",
+      "widget": "pTextOutput",
+
+      "domainObjects": {
+        "data": "contentData/description"
+      }
+    },
+
+    {
+      "label": "Associated Sites",
+      "widget": "pAssociatedSites",
+
+      "config": {
+        "editable": false
+      },
+
+      "domainObjects": {
+        "associatedSites": "p.InsertionInfo/associatedSites",
+        "taxonomyIds": "atex.Metadata/taxonomyIds"
+      }
+    },
+    {
+      "label": "Metadata",
+      "widget": "pMetadata",
+
+      "config": {
+        "editable": false
+      },
+
+      "domainObjects": {
+        "data": "atex.Metadata"
+      }
+    }
+    
+  ]
+}

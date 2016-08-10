@@ -1,0 +1,74 @@
+#set($playerId = "jplayer-" + $m.local.controllerContext.renderId + "-" + $content.contentId.contentId.contentIdString.replaceAll('\.', '-'))
+#set($rs = $m.context.site.bean.resources.strings)
+#if($audioFile)
+<div id="jquery_${playerId}" class="jp-jplayer"></div>
+<div id="jp_container_${playerId}" class="jp-audio" role="application" aria-label="media player">
+  <div class="jp-type-single">
+    <div class="jp-gui jp-interface">
+      <div class="jp-volume-controls">
+        <button class="jp-mute" role="button" tabindex="0">mute</button>
+        <button class="jp-volume-max" role="button" tabindex="0">max volume</button>
+        <div class="jp-volume-bar">
+          <div class="jp-volume-bar-value"></div>
+        </div>
+      </div>
+      <div class="jp-controls-holder">
+        <div class="jp-controls">
+          <button class="jp-play" role="button" tabindex="0">play</button>
+          <button class="jp-stop" role="button" tabindex="0">stop</button>
+        </div>
+        <div class="jp-progress">
+          <div class="jp-seek-bar">
+            <div class="jp-play-bar"></div>
+          </div>
+        </div>
+        <div class="jp-current-time" role="timer" aria-label="time">&nbsp;</div>
+        <div class="jp-duration" role="timer" aria-label="duration">&nbsp;</div>
+        <div class="jp-toggles">
+          <button class="jp-repeat" role="button" tabindex="0">repeat</button>
+        </div>
+      </div>
+    </div>
+    <div class="jp-details">
+      <div class="jp-title" aria-label="title">&nbsp;</div>
+    </div>
+    <div class="jp-no-solution">
+      <span>Update Required</span>
+      To play the media you will need to either update your browser to a recent version or update your <a href="http://get.adobe.com/flashplayer/" target="_blank">Flash plugin</a>.
+    </div>
+  </div>
+</div>
+<script type="text/javascript">
+  $(document).ready(function(){
+    $("#jquery_${playerId}").jPlayer({
+      ready: function () {
+        $(this).jPlayer("setMedia", {
+          title: "$esc.javascript($content.contentData.title)",
+          mp3: "$esc.javascript($audioFile)"
+        });
+      },
+      cssSelectorAncestor: "#jp_container_${playerId}",
+      swfPath: "/jplayer",
+      supplied: "mp3",
+      useStateClassSkin: true,
+      autoBlur: false,
+      smoothPlayBar: true,
+      keyEnabled: true,
+      remainingDuration: true,
+      toggleDuration: true
+    });
+  });
+</script>
+<style type="text/css">
+#jp_container_${playerId} {
+  margin-left: auto;
+  margin-right: auto;
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
+
+#jp_container_${playerId} .jp-controls-holder {
+  width: 400px
+}
+</style>
+#end

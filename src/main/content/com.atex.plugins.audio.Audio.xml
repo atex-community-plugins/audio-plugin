@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<template-definition version="1.0" xmlns="http://www.polopoly.com/polopoly/cm/app/xml">
+  <input-template name="com.atex.plugins.audio.Audio" label="com.atex.plugins.audio.audio">
+    <editor contextName="orchid_TOCENTRY">com.atex.plugins.audio.widget.OAudioTocEntryRenderer</editor>
+    <viewer contextName="orchid_TOCENTRY">com.atex.plugins.audio.widget.OAudioTocEntryRenderer</viewer>
+    <editor contextName="orchid_THUMBENTRY">com.atex.plugins.audio.widget.OSearchThumb</editor>
+    <viewer contextName="orchid_THUMBENTRY">com.atex.plugins.audio.widget.OSearchThumb</viewer>
+
+    <param name="ViewState_insert">false</param>
+    <param name="ViewState_refresh">refresh</param>
+
+    <param name="EditState_saveAndClose">false</param>
+    <param name="EditState_saveAndInsert">false</param>
+    <param name="EditState_saveAndFastInsert">false</param>
+    <param name="EditState_saveAndView">true</param>
+
+    <param name="EditNewState_saveAndClose">false</param>
+    <param name="EditNewState_saveAndInsert">false</param>
+    <param name="EditNewState_saveAndFastInsert">true</param>
+    <param name="EditNewState_saveAndView">false</param>
+
+    <param name="renderTemplateIconInSelect">true</param>
+    <param name="defaultContentDataType">com.atex.plugins.audio.AudioContentDataBean</param>
+    <type>Article</type>
+
+    <field name="associatedUsers" input-template="p.AssociatedUsers" />
+
+    <policy>com.atex.plugins.audio.AudioPolicy</policy>
+
+    <viewer>com.atex.plugins.orchid.onecms.OOneCMSTemplateTopPolicyWidget</viewer>
+    <editor>com.atex.plugins.orchid.onecms.OOneCMSTemplateTopPolicyWidget</editor>
+
+    <param name="oneCMSEditTemplateId">com.atex.plugins.audio.Audio.edit</param>
+    <param name="oneCMSViewTemplateId">com.atex.plugins.audio.Audio.view</param>
+
+    <output-templates mode="www">
+      <id>com.atex.plugins.audio.Audio.ot</id>
+    </output-templates>
+  </input-template>
+</template-definition>
