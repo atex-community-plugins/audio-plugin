@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<batch xmlns="http://www.polopoly.com/polopoly/cm/xmlio">
+  <content>
+    <metadata>
+      <contentid>
+        <major>Department</major>
+        <externalid>p.templatecategory.audio</externalid>
+      </contentid>
+      <input-template>
+        <major>InputTemplate</major>
+        <externalid>p.ResourceTreeCategory</externalid>
+      </input-template>
+      <security-parent>
+        <major>Department</major>
+        <externalid>p.templatecategory.media</externalid>
+      </security-parent>
+    </metadata>
+    <component name="name" group="polopoly.Content">Audio</component>
+    <contentlist mode="modify" group="polopoly.Department">
+      <entry mode="insert" withMetadata="false">
+        <metadata>
+          <referredContent>
+            <contentid>
+              <externalid>com.atex.plugins.audio.Audio</externalid>
+            </contentid>
+          </referredContent>
+        </metadata>
+      </entry>
+    </contentlist>
+  </content>
+
+  <content>
+    <metadata>
+      <contentid>
+        <major>Department</major>
+        <externalid>p.templatecategory.media</externalid>
+      </contentid>
+    </metadata>
+    <contentlist mode="modify" group="polopoly.Department">
+      <entry mode="modify" withMetadata="false">
+        <metadata>
+          <referredContent>
+            <contentid>
+              <externalid>p.templatecategory.audio</externalid>
+            </contentid>
+          </referredContent>
+        </metadata>
+      </entry>
+    </contentlist>
+  </content>
+
+</batch>
