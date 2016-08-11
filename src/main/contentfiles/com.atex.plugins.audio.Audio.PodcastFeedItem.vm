@@ -16,35 +16,36 @@
   #end
   $result.trim()
 #end
-
+#macro(cdata $value)<![CDATA[$!value]]>#end
 #set($link = "#link({'path': $content.parentIds, 'htmlEncodeLink': 'true', 'requestAttribs': {'localLinksEnabled': 'false'}})")
 <item>
-  <title>$esc.xml($!content.name)</title>
+  <title>#cdata($content.name)</title>
   <link>$!link</link>
   <guid>$audioFile</guid>
 
-  <description>$!esc.xml($content.contentData.description)</description>
-  ##<enclosure url="$audioFile" length="11779397" type="$audioType"/>
-  <enclosure url="$audioFile" type="$audioType"/>
+  <description>#cdata($content.contentData.description)</description>
+
+  ## setting length to 0 otherwise the rss is not well formed.
+  <enclosure url="$audioFile" length="0" type="$audioType"/>
 
 #set($dimensions = $content.metadata.dimensions)
 #set($category="#drawDimension($dimensions, 'dimension.IPTC', ',')")
 #if ($category)
-  <category>$esc.xml($category.trim())</category>
+  <category>#cdata($category.trim())</category>
 #end
-  <pubDate>$date.format("E, dd MMM yyyy HH:mm:ss", $content.contentCreationTime)</pubDate>
+  <pubDate>$date.format("E, dd MMM yyyy HH:mm:ss Z", $content.contentCreationTime)</pubDate>
 
 #if ($content.contentData.byline)
   <itunes:author>$content.contentData.byline</itunes:author>
 #end
   <itunes:explicit>No</itunes:explicit>
-  <itunes:subtitle>$!esc.xml($content.contentData.description)</itunes:subtitle>
-  <itunes:summary>$!esc.xml($content.contentData.description)</itunes:summary>
-  <itunes:duration>$content.durationStr</itunes:duration>
+  <itunes:subtitle>#cdata($content.contentData.description)</itunes:subtitle>
+  <itunes:summary>#cdata($content.contentData.description)</itunes:summary>
+  <itunes:duration>#cdata($content.durationStr)</itunes:duration>
 
 #set($tags="#drawDimension($dimensions, 'dimension.Tag', ',')")
 #if ($tags)
-  <itunes:keywords>$esc.xml($tags.trim())</itunes:keywords>
+  <itunes:keywords>#cdata($tags.trim())</itunes:keywords>
 #end
 
 </item>
