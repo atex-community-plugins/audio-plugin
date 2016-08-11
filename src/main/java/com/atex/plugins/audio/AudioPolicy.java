@@ -13,26 +13,71 @@ import com.atex.onecms.content.FilesAspectBean;
 import com.atex.onecms.content.metadata.MetadataInfo;
 import com.polopoly.application.Application;
 import com.polopoly.application.IllegalApplicationStateException;
+import com.polopoly.cm.ContentId;
 import com.polopoly.cm.app.Resource;
 import com.polopoly.cm.app.inbox.InboxFlags;
 import com.polopoly.cm.client.CMException;
 import com.polopoly.cm.client.CMRuntimeException;
 import com.polopoly.cm.client.CmClient;
+import com.polopoly.cm.policymvc.ModelPolicy;
+import com.polopoly.cm.policymvc.PolicyCMServerModelDomain;
+import com.polopoly.cm.policymvc.PolicyCMServerModelDomain.ModelBuilderState;
 import com.polopoly.metadata.Metadata;
 import com.polopoly.metadata.MetadataAware;
 import com.polopoly.metadata.util.MetadataUtil;
+import com.polopoly.model.Model;
+import com.polopoly.model.ModelPathUtil;
+import com.polopoly.model.ModelType;
+import com.polopoly.model.ModelWrite;
+import com.polopoly.siteengine.structure.ParentPathResolver;
 import com.polopoly.util.StringUtil;
 
 public class AudioPolicy extends AspectedPolicy<AudioContentDataBean> implements Resource,
-                                                                                 MetadataAware {
+                                                                                 MetadataAware,
+                                                                                 ModelPolicy {
 
     private static final Logger LOGGER = Logger.getLogger(AudioPolicy.class.getName());
+
     private static final String RESOURCE_TYPE = "audio";
     private static final String FILE_PATH = "/polopoly_fs/%s!/%s";
     private static final String DURATION_NOT_AVAILABLE = "N/A";
-    
+
+    private volatile ContentId[] parentIds = null;
+
     public AudioPolicy(final CmClient cmClient, final Application application) throws IllegalApplicationStateException {
         super(cmClient, application);
+    }
+
+    public ContentId getParentId() throws CMException {
+        ContentId parentId = this.getContentReference("polopoly.Parent", "insertParentId");
+        if(parentId == null) {
+            parentId = this.getSecurityParentId();
+        }
+
+        return parentId;
+    }
+
+    public ContentId[] getParentIds() throws CMException {
+        ContentId[] result = this.parentIds;
+        if(result == null) {
+            synchronized(this) {
+                result = this.parentIds;
+                if(result == null) {
+                    try {
+                        this.parentIds = result = (new ParentPathResolver()).getParentPath(this.getContentId(), this.getCMServer());
+                    } catch (CMException e) {
+                        logger.log(Level.WARNING, "Could not get parent path for " + this.getContentId() + " returning self as only element in parent path.", e);
+                        result = new ContentId[]{this.getContentId().getContentId()};
+                    }
+                }
+            }
+        }
+
+        return result;
+    }
+
+    protected synchronized void clearParentIdsCache() {
+        this.parentIds = null;
     }
 
     @Override
@@ -166,4 +211,27 @@ public class AudioPolicy extends AspectedPolicy<AudioContentDataBean> implements
         }
     }
 
+    /**
+     * Aspected policy do not support ModelTypeDescription, so we hack our
+     * own model.
+     *
+     * @param aDomain
+     * @param modelType
+     * @param globalModel
+     * @param modelBuilderState
+     * @return
+     * @throws CMException
+     */
+    @Override
+    public Model getModel(final PolicyCMServerModelDomain aDomain, final ModelType modelType, final ModelWrite globalModel, final ModelBuilderState modelBuilderState)
+            throws CMException {
+
+        final Model model = super.getModel(aDomain, modelType, globalModel, modelBuilderState);
+        ModelPathUtil.set(model, "parentId", getParentId());
+        ModelPathUtil.set(model, "parentIds", getParentIds());
+        ModelPathUtil.set(model, "durationStr", getDurationStr());
+        ModelPathUtil.set(model, "contentCreationTime", getContentCreationTime());
+        ModelPathUtil.set(model, "metadata", getMetadata());
+        return model;
+    }
 }

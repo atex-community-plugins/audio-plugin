@@ -1,0 +1,50 @@
+#macro(drawDimension $dimensions $id $sep)
+  #set($result='')
+  #foreach($dimension in $dimensions)
+    #if ($dimension.id == $id)
+      #set($entitiesCount = $dimension.entities.size())
+      #if($entitiesCount > 0)
+        #foreach($entity in $dimension.entities)
+          #if ($foreach.count > 1)
+            #set($result="${result}${sep}")
+          #end
+          #set($result="${result}${entity.name}")
+        #end
+      #end
+      #break
+    #end
+  #end
+  $result.trim()
+#end
+
+#set($link = "#link({'path': $content.parentIds, 'htmlEncodeLink': 'true', 'requestAttribs': {'localLinksEnabled': 'false'}})")
+<item>
+  <title>$esc.xml($!content.name)</title>
+  <link>$!link</link>
+  <guid>$audioFile</guid>
+
+  <description>$!esc.xml($content.contentData.description)</description>
+  ##<enclosure url="$audioFile" length="11779397" type="$audioType"/>
+  <enclosure url="$audioFile" type="$audioType"/>
+
+#set($dimensions = $content.metadata.dimensions)
+#set($category="#drawDimension($dimensions, 'dimension.IPTC', ',')")
+#if ($category)
+  <category>$esc.xml($category.trim())</category>
+#end
+  <pubDate>$date.format("E, dd MMM yyyy HH:mm:ss", $content.contentCreationTime)</pubDate>
+
+#if ($content.contentData.byline)
+  <itunes:author>$content.contentData.byline</itunes:author>
+#end
+  <itunes:explicit>No</itunes:explicit>
+  <itunes:subtitle>$!esc.xml($content.contentData.description)</itunes:subtitle>
+  <itunes:summary>$!esc.xml($content.contentData.description)</itunes:summary>
+  <itunes:duration>$content.durationStr</itunes:duration>
+
+#set($tags="#drawDimension($dimensions, 'dimension.Tag', ',')")
+#if ($tags)
+  <itunes:keywords>$esc.xml($tags.trim())</itunes:keywords>
+#end
+
+</item>

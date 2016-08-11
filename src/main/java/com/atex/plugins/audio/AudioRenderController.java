@@ -9,7 +9,8 @@ import com.atex.onecms.content.ContentFileInfo;
 import com.atex.onecms.content.FilesAspectBean;
 import com.polopoly.cm.policy.PolicyCMServer;
 import com.polopoly.cm.servlet.URLBuilder;
-import com.polopoly.model.ModelWrite;
+import com.polopoly.model.Model;
+import com.polopoly.model.ModelPathUtil;
 import com.polopoly.render.RenderRequest;
 import com.polopoly.siteengine.dispatcher.ControllerContext;
 import com.polopoly.siteengine.model.TopModel;
@@ -26,8 +27,8 @@ public class AudioRenderController extends RenderControllerBase {
 
     	super.populateModelBeforeCacheKey(request, topModel, context);
 
-        HttpServletRequest httpServletRequest = (HttpServletRequest) request;
-        ModelWrite localModel = topModel.getLocal();
+        final HttpServletRequest httpServletRequest = (HttpServletRequest) request;
+        final Model localModel = topModel.getLocal();
 
         PolicyCMServer cmServer = getCmClient(context).getPolicyCMServer();
 
@@ -40,9 +41,10 @@ public class AudioRenderController extends RenderControllerBase {
             for (ContentFileInfo f : aspect.getFiles().values()) {
 
                 String audioFileUrl = builder.createFileUrl(context.getContentId(), f.getFilePath(), httpServletRequest);
-                localModel.setAttribute("audioFile", audioFileUrl);
-
+                ModelPathUtil.set(localModel, "audioFile", audioFileUrl);
+                ModelPathUtil.set(localModel, "audioType", "audio/mpeg");
             }
+
         } catch (Exception e) {
             LOG.log(Level.WARNING, "Error", e);
         }
