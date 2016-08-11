@@ -1,5 +1,6 @@
 package com.atex.plugins.audio;
 
+import java.net.URI;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -7,7 +8,9 @@ import javax.servlet.http.HttpServletRequest;
 
 import com.atex.onecms.content.ContentFileInfo;
 import com.atex.onecms.content.FilesAspectBean;
+import com.atex.plugins.audio.util.DomainBuilder;
 import com.polopoly.cm.policy.PolicyCMServer;
+import com.polopoly.cm.servlet.RequestPreparator;
 import com.polopoly.cm.servlet.URLBuilder;
 import com.polopoly.model.Model;
 import com.polopoly.model.ModelPathUtil;
@@ -30,18 +33,27 @@ public class AudioRenderController extends RenderControllerBase {
         final HttpServletRequest httpServletRequest = (HttpServletRequest) request;
         final Model localModel = topModel.getLocal();
 
-        PolicyCMServer cmServer = getCmClient(context).getPolicyCMServer();
+        final PolicyCMServer cmServer = getCmClient(context).getPolicyCMServer();
 
         try {
-            AudioPolicy audio = (AudioPolicy) cmServer.getPolicy(context.getContentId());
+            final AudioPolicy audio = (AudioPolicy) cmServer.getPolicy(context.getContentId());
 
-            URLBuilder builder = new URLBuilder();
+            final URI uri = new DomainBuilder()
+                    .setTopModel(topModel)
+                    .setRequest(httpServletRequest)
+                    .build();
+            final String domain = (uri != null ? uri.toASCIIString() : "");
+            if (uri != null) {
+                ModelPathUtil.set(localModel, "domain", domain);
+            }
+
+            final URLBuilder urlBuilder = RequestPreparator.getURLBuilder(httpServletRequest);
             FilesAspectBean aspect = audio.getFiles();
 
             for (ContentFileInfo f : aspect.getFiles().values()) {
 
-                String audioFileUrl = builder.createFileUrl(context.getContentId(), f.getFilePath(), httpServletRequest);
-                ModelPathUtil.set(localModel, "audioFile", audioFileUrl);
+                final String audioFileUrl = urlBuilder.createFileUrl(context.getContentId(), f.getFilePath(), httpServletRequest);
+                ModelPathUtil.set(localModel, "audioFile", domain + audioFileUrl);
                 ModelPathUtil.set(localModel, "audioType", "audio/mpeg");
             }
 
