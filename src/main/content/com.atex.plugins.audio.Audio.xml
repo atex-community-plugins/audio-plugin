@@ -39,5 +39,8 @@
     <output-templates mode="podcastItem">
       <id>com.atex.plugins.audio.Audio.PodcastItem.ot</id>
     </output-templates>
+    <output-templates mode="podcastFeedItem">
+      <id>com.atex.plugins.audio.Audio.PodcastFeedItem.ot</id>
+    </output-templates>
   </input-template>
 </template-definition>
