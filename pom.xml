@@ -49,6 +49,8 @@
 
   <properties>
     <polopoly.version>${project.parent.version}</polopoly.version>
+    <baseline.version>4.0.2</baseline.version>
+    <testnext.version>2.1.0</testnext.version>
   </properties>
 
   <pluginRepositories>
@@ -104,12 +106,12 @@
     <dependency>
       <groupId>com.atex.plugins</groupId>
       <artifactId>baseline</artifactId>
-      <version>4.0.2</version>
+      <version>${baseline.version}</version>
     </dependency>
     <dependency>
       <groupId>com.atex.plugins</groupId>
       <artifactId>baseline</artifactId>
-      <version>4.0.2</version>
+      <version>${baseline.version}</version>
       <classifier>contentdata</classifier>
     </dependency>
 
@@ -144,6 +146,14 @@
       <artifactId>mockito-core</artifactId>
       <version>1.9.5</version>
       <scope>test</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>com.polopoly</groupId>
+      <artifactId>testnext</artifactId>
+      <version>${testnext.version}</version>
+      <scope>test</scope>
+      <type>pom</type>
     </dependency>
 
   </dependencies>
