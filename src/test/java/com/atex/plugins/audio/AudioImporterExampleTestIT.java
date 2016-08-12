@@ -20,6 +20,8 @@ import com.polopoly.util.StringUtil;
 /**
  * A simple audio import example.
  *
+ * Please uncommit the @Ignore annotation otherwise the cmServer will not be injected.
+ *
  * @author mnova
  */
 @Ignore
@@ -41,6 +43,7 @@ public class AudioImporterExampleTestIT {
         final String byline = "byline";
         final String url = "http://cdn46.castfire.com/audio/522/3444/25318/2932333/2016-08-11acs_2016-08-10-232133-7770-0-644-0.64k.mp3";
 
+        // Please uncommit the @Ignore annotation on the test class otherwise the cmServer will not be injected.
         AudioPolicy audio = (AudioPolicy) cmServer.createContent(1, DEP_ID, AUDIO_TEMPLATE_ID);
         final String fullURL = url;
         final String audioURL;
@@ -69,6 +72,8 @@ public class AudioImporterExampleTestIT {
         audioBean.setDescription(description);
         audioBean.setByline(byline);
         audioBean.setFileName(audioName);
+
+        // not really necessary for the import to be successful.
         audioBean.setDuration(60.0);
         audio.setContentData(audioBean);
 
